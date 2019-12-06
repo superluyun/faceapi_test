@@ -4,6 +4,13 @@
     <h2>Essential Links</h2>
     <ul>
       <li>
+        <router-link
+          to="/face"
+        >
+          face
+        </router-link>
+      </li>
+      <li>
         <a
           href="https://vuejs.org"
           target="_blank"
