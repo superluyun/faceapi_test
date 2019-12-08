@@ -11,6 +11,9 @@
         </router-link>
       </li>
       <li>
+        <router-link to="/webcam"></router-link>
+      </li>
+      <li>
         <a
           href="https://vuejs.org"
           target="_blank"

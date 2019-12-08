@@ -1,19 +1,25 @@
 <template>
   <div>
     <button @click="btn">dddd</button>
-    <img id='face1' src="../face_imgs/timg.jpg" alt="" width="200px" height="263.906">
-    <canvas id="overlay"></canvas>
+    <div style="position: relative;">
+      <img id='face1' src="../face_imgs/A2.jpg" alt="" width="600px">
+      <canvas id="overlay"></canvas>
+    </div>
   </div>
 </template>
 
 <script>
 import * as faceapi from 'face-api.js'
+import * as canvas from 'canvas';
+// import '@tensorflow/tfjs-node';
+// const { Canvas, Image, ImageData } = canvas
+// faceapi.env.monkeyPatch({ Canvas, Image, ImageData })
 
 export default {
   name: 'HelloWorld',
   data () {
     return {
-      
+      imgurl:""
     }
   },
   mounted(){
@@ -22,22 +28,22 @@ export default {
   },
   methods:{
     async fff(){
-      const inputImgEl = document.getElementById('face1')
-      const displaySize = { width: inputImgEl.width, height: inputImgEl.height }  
-      const results =await faceapi.detectAllFaces(inputImgEl)
+      const input = document.getElementById('face1')
+      const displaySize = { width: input.width, height: input.height }  
+      const results = await faceapi.detectAllFaces(input,new faceapi.SsdMobilenetv1Options())
       console.log(results);
       const canvas = document.getElementById('overlay')
       faceapi.matchDimensions(canvas, displaySize)
       const resizedDetections = faceapi.resizeResults(results, displaySize)
-      console.log(resizedDetections);
       faceapi.draw.drawDetections(canvas, resizedDetections)
     },
     btn(){
       this.fff();
-      console.log('cc');
     },
     async ccc(){
-      await faceapi.nets.ssdMobilenetv1.load('./src/assets/weights')
+      await faceapi.loadSsdMobilenetv1Model('https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights')
+      console.log('cc');
+      this.fff();
     },
     getFaceDetectorOptions() {
       const SSD_MOBILENETV1 = 'ssd_mobilenetv1'
@@ -67,5 +73,9 @@ export default {
 
 
 <style scoped>
-
+  #overlay{
+    position: absolute;
+    top:0;
+    left: 0;
+  }
 </style>
