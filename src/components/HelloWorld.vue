@@ -11,7 +11,7 @@
         </router-link>
       </li>
       <li>
-        <router-link to="/webcam"></router-link>
+        <router-link to="/webcam">webcam</router-link>
       </li>
       <li>
         <a
