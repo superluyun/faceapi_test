@@ -10,7 +10,7 @@
 
 <script>
 import * as faceapi from 'face-api.js'
-import * as canvas from 'canvas';
+import * as canvas from 'canvas'
 
 export default {
   name: 'HelloWorld',
@@ -20,15 +20,19 @@ export default {
     }
   },
   mounted(){
-    //   
+    //
+    // setInterval(()=>{this.run()} ,100);   
     this.run();
     
   },
   methods:{
     async fff(){
       const input = document.getElementById('video')
+
+      // if(input.paused || input.ended)
+      //   return setTimeout(() => this.fff())
       const displaySize = { width: input.width, height: input.height }  
-      const results = await faceapi.detectAllFaces(input,new faceapi.SsdMobilenetv1Options())
+      const results = await faceapi.detectSingleFace(input,new faceapi.SsdMobilenetv1Options())
       console.log(results);
       const canvas = document.getElementById('overlay')
       faceapi.matchDimensions(canvas, displaySize)
@@ -42,6 +46,7 @@ export default {
       await faceapi.loadSsdMobilenetv1Model('https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights')
       console.log('cc');
       this.fff();
+
     },
     async run() {
       const stream = await navigator.mediaDevices.getUserMedia({ video: {} })
