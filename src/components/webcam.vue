@@ -1,16 +1,18 @@
 <template>
   <div>
-    <button @click="btn">dddd</button>
+    <button @click="btn">start</button>
     <div style="position: relative;">
       <video @onloadedmetadata="run(this)" src="" id="video" autoplay muted loop playsinline width="600px" height="336px"></video>
       <canvas id="overlay"></canvas>
     </div>
+    <img id="face_img" src="" alt="">
   </div>
 </template>
 
 <script>
 import * as faceapi from 'face-api.js'
 import * as canvas from 'canvas'
+import { rsqrt } from '@tensorflow/tfjs-core';
 
 export default {
   name: 'HelloWorld',
@@ -31,20 +33,36 @@ export default {
 
       // if(input.paused || input.ended)
       //   return setTimeout(() => this.fff())
+      if(input.paused || input.ended)
+        return setTimeout(() => this.fff())
       const displaySize = { width: input.width, height: input.height }  
-      const results = await faceapi.detectSingleFace(input,new faceapi.SsdMobilenetv1Options())
-      console.log(results);
+      const results = await faceapi.detectAllFaces(input)
+      // console.log(results)
       const canvas = document.getElementById('overlay')
-      faceapi.matchDimensions(canvas, displaySize)
-      const resizedDetections = faceapi.resizeResults(results, displaySize)
-      faceapi.draw.drawDetections(canvas, resizedDetections)
+      if(results){
+        faceapi.matchDimensions(canvas, displaySize)
+        const resizedDetections = faceapi.resizeResults(results, displaySize)
+        faceapi.draw.drawDetections(canvas, resizedDetections)
+        const canvases = await faceapi.extractFaces(input, results)
+        var img_face = document.getElementById('face_img')
+        input.pause();
+        for(var i of canvases){
+          var img = new Image();
+          img_face.src = i.toDataURL('image/png')
+        }
+        
+        // console.log(canvases);
+      }
+      setTimeout(()=>{
+        this.fff()
+      })
     },
     btn(){
       this.fff();
     },
     async ccc(){
-      await faceapi.loadSsdMobilenetv1Model('https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights')
-      console.log('cc');
+      await faceapi.loadSsdMobilenetv1Model('/static/models')
+      console.log('ready');
       this.fff();
 
     },
