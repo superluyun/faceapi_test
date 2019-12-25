@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import face_api from '@/components/face-api'
 import webcam from '@/components/webcam'
+import tinyface from '@/components/TinyFaceDetector'
 
 Vue.use(Router)
 
@@ -23,6 +24,10 @@ export default new Router({
       name:'webcam',
       component:webcam
     },
-    
+    {
+      path:'/tinyface',
+      name:'tinyface',
+      component:tinyface
+    }
   ]
 })

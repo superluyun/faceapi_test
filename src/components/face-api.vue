@@ -2,7 +2,7 @@
   <div style="width:70%;margin:0 auto">
     <button @click="btn">start</button>
     <div style="position: relative; float:left">
-      <img id='face1' src="../face_imgs/Avengers2.jpg" alt="" width="600px">
+      <img id='face1' src="../face_imgs/timg.jpg" alt="" width="600px">
       <canvas id="overlay"></canvas>
     </div>
     <div style="float:right">

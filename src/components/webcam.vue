@@ -1,11 +1,11 @@
 <template>
   <div>
-    <button @click="btn">start</button>
+    <!-- <button @click="btn">start</button> -->
     <div style="position: relative;">
-      <video @onloadedmetadata="run(this)" src="" id="video" autoplay muted loop playsinline width="600px" height="336px"></video>
+      <video @onloadedmetadata="run(this)" src="" id="video" autoplay muted loop playsinline width="450px" height="336"></video>
       <canvas id="overlay"></canvas>
     </div>
-    <img id="face_img" src="" alt="">
+    <img id="face_img" src="" alt="" width="128px">
   </div>
 </template>
 
@@ -30,22 +30,20 @@ export default {
   methods:{
     async fff(){
       const input = document.getElementById('video')
-
-      // if(input.paused || input.ended)
-      //   return setTimeout(() => this.fff())
       if(input.paused || input.ended)
         return setTimeout(() => this.fff())
       const displaySize = { width: input.width, height: input.height }  
-      const results = await faceapi.detectAllFaces(input)
+      const results = await faceapi.detectAllFaces(input, new faceapi.TinyFaceDetectorOptions({inputSize:224},{scoreThreshold:0.7}))
       // console.log(results)
       const canvas = document.getElementById('overlay')
       if(results){
         faceapi.matchDimensions(canvas, displaySize)
         const resizedDetections = faceapi.resizeResults(results, displaySize)
         faceapi.draw.drawDetections(canvas, resizedDetections)
+        //截图
         const canvases = await faceapi.extractFaces(input, results)
         var img_face = document.getElementById('face_img')
-        input.pause();
+        // input.pause();
         for(var i of canvases){
           var img = new Image();
           img_face.src = i.toDataURL('image/png')
@@ -58,19 +56,22 @@ export default {
       })
     },
     btn(){
+      const input = document.getElementById('video')
+      input.play();
       this.fff();
     },
     async ccc(){
-      await faceapi.loadSsdMobilenetv1Model('/static/models')
+      await faceapi.loadTinyFaceDetectorModel('/static/models')
       console.log('ready');
       this.fff();
 
     },
     async run() {
+      this.ccc();
       const stream = await navigator.mediaDevices.getUserMedia({ video: {} })
       const videoEl = document.getElementById('video')
       videoEl.srcObject = stream
-      this.ccc();
+      
     },
     getFaceDetectorOptions() {
       const SSD_MOBILENETV1 = 'ssd_mobilenetv1'
